@@ -19,10 +19,48 @@ var Player = function(){
 
 Player.prototype.update = function(deltaTime)
 {
+    var left = false;
+    var right = false;
+    var jump = false;
+
+    // Check keypress events.
+    if(keyboard.isKeyDown(keyboard.KEY_LEFT) == true)
+    {
+        left = true;
+    }
+    if(keyboard.isKeyDown(keyboard.KEY_RIGHT) == true)
+    {
+        right = true;
+    }
+    if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
+    {
+        jump = true;
+    }
+
+    if (left)
+    {
+        ddx = ddx - ACCEL;
+    }
+    else if (wasleft)
+    {
+        ddx = ddx + FRICTION;
+    }
+
+    if (right)
+    {
+        ddx = ddx + ACCEL;
+    }
+    else if (wasright)
+    {
+        ddx = ddx - FRICTION;
+    }
+
+
+    // Collision detection.
     var tx = pixelToTile(this.position.x);
     var ty = pixelToTile(this.position.y);
-    var nx = (this.position.x) % TILE;
-    var ny = (this.position.y) % TILE;
+    var nx = (this.position.x) % TILE; // true if player overlaps right.
+    var ny = (this.position.y) % TILE; // true if player overlaps below.
     var cell = cellAtTileCoord(LAYER_PLATFORMS, tx, ty);
     var cellright = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty);
     var celldown = cellAtTileCoord(LAYER_PLATFORMS, tx, ty + 1);
