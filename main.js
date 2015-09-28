@@ -71,10 +71,15 @@ chuckNorris.src = "hero.png";
 var player = new Player();
 var enemy = new Enemy();
 var keyboard = new Keyboard();
+var gs = new GameState();
 
 // Load the image to use for level tiles.
 var tileset = document.createElement("img");
 tileset.src = "tileset.png";
+
+// My variables.
+var gameOverTimer = 0;
+
 
 // Utility functions.
 function  cellAtPixelCoord(layer, x, y)
@@ -127,7 +132,6 @@ function bound(value, min, max)
     }
     return value;
 }
-
 
 function drawMap()
 {
@@ -186,31 +190,114 @@ function initialize()
 }
 
 
+// Helper function to show collisions.
 function drawCollisions(drawCol)
 {
-    // DRAW RED BOXES
+    // Draw red boxes.
     if (drawCol)
     {
-        // draw the player collisions
+        // Draw the player collisions.
         context.fillStyle = "#FF0";
         context.fillRect(player.position.x, player.position.y, TILE, TILE);
 
-        // draw the collision map
+        // Draw the collision map.
         context.fillStyle = "#f00";
-        for (var i = 0; i < cells.length; ++i) {
+        for (var i = 0; i < cells.length; ++i)
+        {
             if (i != 1) continue;
             var layer = cells[i];
-            for (var y = 0; y < layer.length; ++y) {
+            for (var y = 0; y < layer.length; ++y)
+            {
                 var row = layer[y];
-                for (var x = 0; x < row.length; ++x) {
+                for (var x = 0; x < row.length; ++x)
+                {
                     var cell = row[x];
-                    if (cell) {
+                    if (cell)
+                    {
                         context.fillRect(x * TILE - 1, y * TILE - 1, TILE - 2, TILE - 2);
                     }
                 }
             }
         }
     }
+}
+
+function runSplash(deltaTime)
+{
+    context.fillStyle = "#5E8591";
+    context.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+    context.font = "55px Arial";
+    context.fillStyle = "#f5f5f5"
+    context.textAlign = "center";
+    context.fillText("PLATFORMER GAME", canvas.width/2, 130);
+    context.font = "25px Arial";
+    context.fillText("PRESS SPACE", canvas.width/2, 190);
+
+
+    // Check for spacebar
+    if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
+    {
+         gs.state = gs.STATE_GAME;
+    }
+
+}
+
+function runGame(deltaTime)
+{
+    // Draw the map.
+    drawMap();
+
+    player.update(deltaTime);
+    player.draw();
+
+    enemy.update(deltaTime);
+    enemy.draw();
+
+    // Quick Check for game Over if falls of screen.
+    if (player.position.y > SCREEN_HEIGHT + 35)
+    {
+        gs.state = gs.STATE_GAMEOVER;
+    }
+
+}
+
+function runGameOver(deltaTime)
+{
+    context.fillStyle = "#916A5E";
+    context.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+    context.font = "55px Arial";
+    context.fillStyle = "#f5f5f5"
+    context.textAlign = "center";
+    context.fillText("GAME OVER", canvas.width/2, 130);
+
+    // Handle Timer.
+    gameOverTimer += deltaTime;
+    if(gameOverTimer > 3)
+    {
+        gameOverTimer = 0;
+        gs.state = gs.STATE_SPLASH;
+    }
+
+}
+
+function runFPS(deltaTime)
+{
+    // Update the frame counter.
+    fpsTime += deltaTime;
+    fpsCount++;
+    if(fpsTime >= 1)
+    {
+        fpsTime -= 1;
+        fps = fpsCount;
+        fpsCount = 0;
+    }
+
+    // Draw the FPS.
+    context.fillStyle = "#f00";
+    context.font = "14px Arial";
+    context.fillText("FPS: " + fps, 5, 20, 100);
 }
 
 
@@ -221,31 +308,24 @@ function run()
 
 	var deltaTime = getDeltaTime();
 
-    // draw the map.
-    drawMap();
+    if (gs.state == gs.STATE_SPLASH)
+    {
+        runSplash(deltaTime);
+    }
+    else if (gs.state == gs.STATE_GAME)
+    {
+        runGame(deltaTime); // Game.
+        drawCollisions(true); // Draw Collisions.
+    }
+    else
+    {
+        // Game Over State
+        runGameOver(deltaTime);
+    }
 
-    player.update(deltaTime);
-    player.draw();
+    runFPS(deltaTime); // Draw FPS.
 
-    enemy.update(deltaTime);
-    enemy.draw();
-
-	// update the frame counter
-	fpsTime += deltaTime;
-	fpsCount++;
-	if(fpsTime >= 1)
-	{
-		fpsTime -= 1;
-		fps = fpsCount;
-		fpsCount = 0;
-	}
-
-	// draw the FPS
-	context.fillStyle = "#f00";
-	context.font="14px Arial";
-	context.fillText("FPS: " + fps, 5, 20, 100);
-
-    drawCollisions(false);
+    console.log(gs.state);
 
 }
 

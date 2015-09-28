@@ -77,7 +77,6 @@ Player.prototype.update = function(deltaTime)
         this.velocity.x = 0;
     }
 
-
     // Collision detection.
     var tx = pixelToTile(this.position.x);
     var ty = pixelToTile(this.position.y);
@@ -136,7 +135,6 @@ Player.prototype.update = function(deltaTime)
             }
         }
     }
-
 
 }
 
