@@ -105,10 +105,15 @@ function cellAtTileCoord(layer, tx, ty)
     return cells[layer][ty][tx];
 };
 
-function pixelToTile(tile)
+function tileToPixel(tile)
 {
     return tile * TILE;
 };
+
+function pixelToTile(pixel)
+{
+    return Math.floor(pixel/TILE);
+}
 
 function bound(value, min, max)
 {
@@ -180,6 +185,35 @@ function initialize()
     }
 }
 
+
+function drawCollisions(drawCol)
+{
+    // DRAW RED BOXES
+    if (drawCol)
+    {
+        // draw the player collisions
+        context.fillStyle = "#FF0";
+        context.fillRect(player.position.x, player.position.y, TILE, TILE);
+
+        // draw the collision map
+        context.fillStyle = "#f00";
+        for (var i = 0; i < cells.length; ++i) {
+            if (i != 1) continue;
+            var layer = cells[i];
+            for (var y = 0; y < layer.length; ++y) {
+                var row = layer[y];
+                for (var x = 0; x < row.length; ++x) {
+                    var cell = row[x];
+                    if (cell) {
+                        context.fillRect(x * TILE - 1, y * TILE - 1, TILE - 2, TILE - 2);
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 function run()
 {
 	context.fillStyle = "#ccc";
@@ -210,6 +244,9 @@ function run()
 	context.fillStyle = "#f00";
 	context.font="14px Arial";
 	context.fillText("FPS: " + fps, 5, 20, 100);
+
+    drawCollisions(false);
+
 }
 
 initialize();
