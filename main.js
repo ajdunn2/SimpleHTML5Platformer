@@ -239,7 +239,7 @@ function runSplash(deltaTime)
     // Check for spacebar
     if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
     {
-         gs.state = gs.STATE_GAME;
+         gs.setState(gs.STATE_GAME);
     }
 
 }
@@ -258,7 +258,7 @@ function runGame(deltaTime)
     // Quick Check for game Over if falls of screen.
     if (player.position.y > SCREEN_HEIGHT + 35)
     {
-        gs.state = gs.STATE_GAMEOVER;
+        gs.setState(gs.STATE_GAMEOVER);
     }
 
 }
@@ -278,7 +278,10 @@ function runGameOver(deltaTime)
     if(gameOverTimer > 3)
     {
         gameOverTimer = 0;
-        gs.state = gs.STATE_SPLASH;
+        // Put the player back to start for now.
+        player.position.x = SCREEN_WIDTH/2;
+        player.position.y = 0;
+        gs.setState(gs.STATE_SPLASH);
     }
 
 }
