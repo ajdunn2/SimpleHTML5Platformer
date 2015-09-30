@@ -35,8 +35,8 @@ Vector2.prototype.subtract = function(v2)
 
 Vector2.prototype.multiplyScalar = function(num)
 {
-    this.x = this.x * num;
-    this.x = this.y * num;
+    this.x *= num;
+    this.y *= num;
 }
 
 Vector2.prototype.copy = function(){
