@@ -179,8 +179,9 @@ function initialize()
                     cells[layerIdx][y-1][x+1] = 1;
                     cells[layerIdx][y][x+1] = 1;
                 }
-                else if(cells[layerIdx][y][x])
+                else if(cells[layerIdx][y][x] != 1)
                 {
+                    // If we haven't set this cell's value, then set it to 0 now.
                     cells[layerIdx][y][x] = 0;
                 }
                 idx++;
@@ -324,8 +325,6 @@ function run()
     }
 
     runFPS(deltaTime); // Draw FPS.
-
-    console.log(gs.state);
 
 }
 
