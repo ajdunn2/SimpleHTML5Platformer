@@ -7,7 +7,10 @@ var ANIM_WALK_LEFT = 2;
 var ANIM_IDLE_RIGHT = 3;
 var ANIM_JUMP_RIGHT = 4;
 var ANIM_WALK_RIGHT = 5;
-var ANIM_MAX = 6;
+var ANIM_SHOOT_LEFT = 6;
+var ANIM_SHOOT_RIGHT = 7;
+var ANIM_CLIMB = 8;
+var ANIM_MAX = 9;
 
 var Player = function(){
     this.sprite = new Sprite("ChuckNorris.png");
@@ -23,6 +26,12 @@ var Player = function(){
         [60, 61, 62, 63, 64]);
     this.sprite.buildAnimation(12, 8, 165, 126, 0.05,
         [65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78]);
+    this.sprite.buildAnimation(12, 8, 165, 126, 0.05,
+    [27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]);
+    this.sprite.buildAnimation(12, 8, 165, 126, 0.05,
+    [79, 80, 81, 82,83, 84, 85, 86, 87, 88, 89, 90, 91, 92]);
+    this.sprite.buildAnimation(12, 8, 165, 126, 0.05,
+        [41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51]);
 
     for(var i=0; i<ANIM_MAX; i++)
     {
