@@ -29,6 +29,8 @@ var Player = function(){
         this.sprite.setAnimationOffset(i, -55, -87);
     }
 
+    this.cooldownTimer = 0;
+
     this.position = new Vector2();
     this.position.set(9*TILE, 0*TILE);
 
@@ -93,7 +95,7 @@ Player.prototype.update = function(deltaTime)
         }
     }
 
-    if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
+    if(keyboard.isKeyDown(keyboard.KEY_UP) == true)
     {
         jump = true;
         if(left == true)
@@ -105,6 +107,21 @@ Player.prototype.update = function(deltaTime)
             this.sprite.setAnimation(ANIM_JUMP_RIGHT);
         }
     }
+
+    // From Audio tutorial.
+    if(this.cooldownTimer >0)
+    {
+        this.cooldownTimer -= deltaTime;
+    }
+    if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true
+    && this.cooldownTimer <= 0)
+    {
+        sfxFire.play();
+        this.cooldownTimer = 0.3;
+        // Shoot a bullet.
+    }
+
+
 
     var wasleft = this.velocity.x < 0;
     var wasright = this.velocity.x > 0;

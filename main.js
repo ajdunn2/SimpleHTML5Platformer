@@ -188,6 +188,27 @@ function initialize()
             }
         }
     }
+
+    musicBackground = new Howl(
+    {
+        urls: ['background.ogg'],
+        loop: true,
+        buffer: true,
+        volume: 0.5
+    });
+
+    musicBackground.play();
+
+    sfxFire = new Howl(
+    {
+        urls: ['fireEffect.ogg'],
+        buffer: true,
+        volume: 1,
+        onend: function() {
+            isSfxPlaying = false;
+        }
+    });
+
 }
 
 
