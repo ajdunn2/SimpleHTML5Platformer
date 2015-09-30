@@ -315,7 +315,7 @@ function run()
     else if (gs.state == gs.STATE_GAME)
     {
         runGame(deltaTime); // Game.
-        drawCollisions(true); // Draw Collisions.
+        drawCollisions(false); // Draw Collisions.
     }
     else
     {
