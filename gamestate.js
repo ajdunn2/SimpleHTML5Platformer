@@ -6,7 +6,6 @@ var GameState = function(){
     this.STATE_HIGH_SCORES = 4;
 
     this.state = 0;
-    console.log(this.state);
 }
 
 GameState.prototype.setState = function(state)
