@@ -322,7 +322,7 @@ function runFPS(deltaTime)
     // Draw the FPS.
     context.fillStyle = "#f00";
     context.font = "14px Arial";
-    context.fillText("FPS: " + fps, 5, 20, 100);
+    context.fillText("FPS: " + fps, 25, 20, 100);
 }
 
 
