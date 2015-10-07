@@ -27,11 +27,11 @@ var Player = function(){
     this.sprite.buildAnimation(12, 8, 165, 126, 0.05,
         [65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78]);
     this.sprite.buildAnimation(12, 8, 165, 126, 0.05,
-    [27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]);
+    [27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]); // shoot left.
     this.sprite.buildAnimation(12, 8, 165, 126, 0.05,
-    [79, 80, 81, 82,83, 84, 85, 86, 87, 88, 89, 90, 91, 92]);
+    [79, 80, 81, 82,83, 84, 85, 86, 87, 88, 89, 90, 91, 92]); // shoot right.
     this.sprite.buildAnimation(12, 8, 165, 126, 0.05,
-        [41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51]);
+        [41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51]); // climb.
 
     for(var i=0; i<ANIM_MAX; i++)
     {
@@ -129,8 +129,6 @@ Player.prototype.update = function(deltaTime)
         this.cooldownTimer = 0.3;
         // Shoot a bullet.
     }
-
-
 
     var wasleft = this.velocity.x < 0;
     var wasright = this.velocity.x > 0;
@@ -244,5 +242,5 @@ Player.prototype.update = function(deltaTime)
 
 Player.prototype.draw = function()
 {
-    this.sprite.draw(context, this.position.x, this.position.y);
+    this.sprite.draw(context, this.position.x - worldOffsetX, this.position.y);
 }

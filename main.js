@@ -80,6 +80,8 @@ tileset.src = "tileset.png";
 // My variables.
 var gameOverTimer = 0;
 
+var worldOffsetX = 0;
+
 // UI variables
 var score = 0;
 var lives = 4;
@@ -139,21 +141,43 @@ function bound(value, min, max)
 
 function drawMap()
 {
-    for(var layerIdx=0; layerIdx<LAYER_COUNT; layerIdx++)
+		// Scrolling the level.
+		var maxTiles = Math.floor(SCREEN_WIDTH / TILE) + 2;
+		var tileX = pixelToTile(player.position.x);
+		var offsetX = TILE + Math.floor(player.position.x % TILE);
+
+		startX = tileX - Math.floor(maxTiles / 2);
+
+		if(startX < -1)
+		{
+				startX = 0;
+				offsetX = 0;
+		}
+		if(startX > MAP.tw - maxTiles)
+		{
+			startX = MAP.tw - maxTiles + 1;
+			offsetX = TILE;
+		}
+
+		worldOffsetX = startX * TILE + offsetX;
+
+		// Draw the Map.
+    for(var layerIdx = 0; layerIdx < LAYER_COUNT; layerIdx++)
     {
-        var idx = 0;
-        for(var y=0; y<level1.layers[layerIdx].height; y++)
+        for(var y = 0; y < level1.layers[layerIdx].height; y++)
         {
-            for(var x=0; x<level1.layers[layerIdx].width; x++)
+			var idx = y * level1.layers[layerIdx].width + startX;
+
+            for(var x = startX; x < startX + maxTiles; x++)
             {
-                if(level1.layers[layerIdx].data[idx] !=0)
+                if(level1.layers[layerIdx].data[idx] != 0)
                 {
-                    // The tiles in the Tiled map are base 1 (meaning a value of 0 means no tile), so subtract one from the tileset id to get the
-                    // correct tile.
+                    // The tiles in the Tiled map are base 1 (meaning a value of 0 means no tile),
+					// so subtract one from the tileset id to get the correct tile.
                     var tileIndex = level1.layers[layerIdx].data[idx] - 1;
                     var sx = TILESET_PADDING + (tileIndex % TILESET_COUNT_X) * (TILESET_TILE + TILESET_SPACING);
                     var sy = TILESET_PADDING + (Math.floor(tileIndex/TILESET_COUNT_Y)) * (TILESET_TILE + TILESET_SPACING);
-                    context.drawImage(tileset, sx, sy, TILESET_TILE, TILESET_TILE, x * TILE, (y-1) * TILE, TILESET_TILE, TILESET_TILE);
+					context.drawImage(tileset, sx, sy, TILESET_TILE, TILESET_TILE, (x-startX) * TILE - offsetX, (y-1) * TILE, TILESET_TILE, TILESET_TILE);
                 }
                 idx++;
             }
@@ -271,32 +295,33 @@ function runSplash(deltaTime)
 
 function runGame(deltaTime)
 {
-		// Quick Check for game Over if falls of screen.
-		if (player.position.y > SCREEN_HEIGHT + 35)
-		{
-				lives = lives -1; // loose one heart.
-				gs.setState(gs.STATE_GAMEOVER);
-		}
+	// Quick Check for game Over if falls of screen.
+	if (player.position.y > SCREEN_HEIGHT + 35)
+	{
+			lives = lives -1; // loose one heart.
+			gs.setState(gs.STATE_GAMEOVER);
+	}
 
-		// Draw the map.
-    drawMap();
-
+	// Updates
     player.update(deltaTime);
+
+	// Draw the map.
+    drawMap();
     player.draw();
+	handleEnemy(deltaTime);
 
-		handleEnemy(deltaTime);
+	// Draw Score.
+	context.fillStyle = "white";
+	context.font="28px Arial";
+	context.textAlign = "center";
+	var scoreText = "SCORE: " + score;
+	context.fillText(scoreText, SCREEN_WIDTH /2, 35);
 
-		// Score.
-		context.fillStyle = "white";
-		context.font="28px Arial";
-		context.textAlign = "center";
-		var scoreText = "SCORE: " + score;
-		context.fillText(scoreText, SCREEN_WIDTH /2, 35);
-		// Life counter.
-		for(var i=0; i<lives; i++)
-		{
- 			// context.drawImage(heartImage, 20 + ((heartImage.width+2)*i), 10);
-		}
+	// Draw Life counter.
+	for(var i=0; i<lives; i++)
+	{
+			// context.drawImage(heartImage, 20 + ((heartImage.width+2)*i), 10);
+	}
 }
 
 function handleEnemy(deltaTime)
