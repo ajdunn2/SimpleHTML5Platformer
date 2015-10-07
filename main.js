@@ -57,6 +57,18 @@ var ACCEL = MAXDX * 2; // Horizontal acceleration. Take 1/2 sec to reach MAXDX
 var FRICTION = MAXDX * 6; // Take 1/6 sec to stop from MAXDX.
 var JUMP = METER * 1500;
 
+// Enemy constants.
+var ENEMY_MAXDX = METER * 5;
+var ENEMY_ACCEL = ENEMY_MAXDX * 2;
+
+var LAYER_COUNT = 3;
+var LAYER_BACKGOUND = 0;
+var LAYER_PLATFORMS = 1;
+var LAYER_LADDERS = 2;
+
+var LAYER_OBJECT_ENEMIES = 3;
+var LAYER_OBJECT_TRIGGERS = 4;
+
 // some variables to calculate the Frames Per Second (FPS - this tells use
 // how fast our game is running, and allows us to make the game run at a
 // constant speed)
@@ -69,9 +81,10 @@ var chuckNorris = document.createElement("img");
 chuckNorris.src = "hero.png";
 
 var player = new Player();
-var enemy = new Enemy();
 var keyboard = new Keyboard();
 var gs = new GameState();
+
+var enemies = [];
 
 // Load the image to use for level tiles.
 var tileset = document.createElement("img");
