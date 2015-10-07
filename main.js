@@ -80,6 +80,10 @@ tileset.src = "tileset.png";
 // My variables.
 var gameOverTimer = 0;
 
+// UI variables
+var score = 0;
+var lives = 4;
+
 
 // Utility functions.
 function  cellAtPixelCoord(layer, x, y)
@@ -267,21 +271,38 @@ function runSplash(deltaTime)
 
 function runGame(deltaTime)
 {
-    // Draw the map.
+		// Quick Check for game Over if falls of screen.
+		if (player.position.y > SCREEN_HEIGHT + 35)
+		{
+				lives = lives -1; // loose one heart.
+				gs.setState(gs.STATE_GAMEOVER);
+		}
+
+		// Draw the map.
     drawMap();
 
     player.update(deltaTime);
     player.draw();
 
-    enemy.update(deltaTime);
-    enemy.draw();
+		handleEnemy(deltaTime);
 
-    // Quick Check for game Over if falls of screen.
-    if (player.position.y > SCREEN_HEIGHT + 35)
-    {
-        gs.setState(gs.STATE_GAMEOVER);
-    }
+		// Score.
+		context.fillStyle = "white";
+		context.font="28px Arial";
+		context.textAlign = "center";
+		var scoreText = "SCORE: " + score;
+		context.fillText(scoreText, SCREEN_WIDTH /2, 35);
+		// Life counter.
+		for(var i=0; i<lives; i++)
+		{
+ 			// context.drawImage(heartImage, 20 + ((heartImage.width+2)*i), 10);
+		}
+}
 
+function handleEnemy(deltaTime)
+{
+		// enemy.update(deltaTime);
+		// enemy.draw();
 }
 
 function runGameOver(deltaTime)
@@ -320,9 +341,9 @@ function runFPS(deltaTime)
     }
 
     // Draw the FPS.
-    context.fillStyle = "#f00";
-    context.font = "14px Arial";
-    context.fillText("FPS: " + fps, 25, 20, 100);
+    // context.fillStyle = "#f00";
+    // context.font = "14px Arial";
+    // context.fillText("FPS: " + fps, 25, 20, 100);
 }
 
 
