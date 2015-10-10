@@ -40,6 +40,7 @@ var Player = function()
     }
 
     this.cooldownTimer = 0;
+    this.hitTimer = 0.5;
 
     this.position = new Vector2();
     this.position.set(9*TILE, 0*TILE);
@@ -53,11 +54,20 @@ var Player = function()
     this.jumping = false;
 
     this.direction = LEFT;
+
+    this.health = 6;
 }
 
 Player.prototype.update = function(deltaTime)
 {
     this.sprite.update(deltaTime);
+
+    // Player can not be hit if hitTimer > 0
+    if (this.hitTimer > 0)
+    {
+        this.hitTimer -= deltaTime;
+    }
+
 
     var left = false;
     var right = false;
@@ -276,7 +286,13 @@ Player.prototype.update = function(deltaTime)
 
     if(cellAtTileCoord(LAYER_OBJECT_TRIGGERS, tx, ty) == true)
     {
-        // game over
+        // game over (do let player go over top of screen)
+        if (player.position.y > 0){
+            gs.setState(gs.STATE_GAMEOVER);
+        }
+    }
+
+    if (player.health <= 0){
         gs.setState(gs.STATE_GAMEOVER);
     }
 
