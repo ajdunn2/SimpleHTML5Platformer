@@ -6,8 +6,8 @@ var ANIM_BAT_MAX = 2;
 var Enemy = function(x, y)
 {
     this.sprite = new Sprite("bat.png");
-    this.sprite.buildAnimation(3, 1, 88, 94, 0.3, [0, 1, 2]);
-    this.sprite.buildAnimation(3, 1, 88, 94, 0.3, [3, 4, 5]);
+    this.sprite.buildAnimation(3, 1, 88, 94, 0.3, [0, 1]);
+    this.sprite.buildAnimation(3, 1, 88, 94, 0.3, [3, 4]);
 
     // Handle Animation Offset for all Animations.
     for(var i = 0; i < ANIM_BAT_MAX; i++)
@@ -21,8 +21,29 @@ var Enemy = function(x, y)
     this.position = new Vector2();
     this.position.set(x, y);
     this.velocity = new Vector2();
-    this.moveRight = true;
+
+    var dir = rand(0,1);
+
+    if (dir == 0)
+    {
+        this.moveRight = true;
+        this.sprite.setAnimation(ANIM_BAT_RIGHT);
+    }
+    else
+    {
+        this.moveRight = false;
+        this.sprite.setAnimation(ANIM_BAT_LEFT);
+    }
+
+
+
     this.pause = 0;
+}
+
+// Return a random number between to variables.
+function rand(floor, ceil)
+{
+	return Math.floor((Math.random()*(ceil-floor))+floor);
 }
 
 Enemy.prototype.update = function(deltaTime)
@@ -56,6 +77,8 @@ Enemy.prototype.update = function(deltaTime)
             {
                 this.velocity.x = 0;
                 this.moveRight = false;
+                // Set Animation go letft
+                this.sprite.setAnimation(ANIM_BAT_LEFT);
                 this.pause = 0.5;
             }
         }
@@ -70,6 +93,8 @@ Enemy.prototype.update = function(deltaTime)
             {
                 this.velocity.x =0;
                 this.moveRight = true;
+                // Set Animation go right
+                this.sprite.setAnimation(ANIM_BAT_RIGHT);
                 this.pause = 0.5;
             }
         }
@@ -81,15 +106,5 @@ Enemy.prototype.update = function(deltaTime)
 
 Enemy.prototype.draw = function()
 {
-
-    if(this.moveRight)
-    {
-        this.sprite.setAnimation(ANIM_BAT_LEFT);
         this.sprite.draw(context, this.position.x - worldOffsetX, this.position.y);
-    }
-    else
-    {
-        this.sprite.setAnimation(ANIM_BAT_RIGHT);
-        this.sprite.draw(context, this.position.x - worldOffsetX, this.position.y);
-    }
 }

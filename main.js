@@ -86,6 +86,8 @@ var gs = new GameState();
 
 var enemies = [];
 
+var bullets = [];
+
 // Load the image to use for level tiles.
 var tileset = document.createElement("img");
 tileset.src = "tileset.png";
@@ -352,6 +354,9 @@ function runGame(deltaTime)
     // Check for enemies hitting player
     handleEnemy(3, deltaTime);
 
+    // Bullets hitting enemies
+    handleBullets();
+
 	// Draw
     drawMap(); // Draw Map
     player.draw(); // Draw Player
@@ -370,6 +375,40 @@ function runGame(deltaTime)
 			// context.drawImage(heartImage, 20 + ((heartImage.width+2)*i), 10);
 	}
 }
+
+function handleBullets()
+{
+    var hit = false;
+    for(var i = 0; i < bullets.length; i++)
+    {
+        bullets[i].update(deltaTime);
+        if(bullets[i].position.x - worldOffsetX < 0 ||
+            bullets[i].position.x - worldOffsetX > SCREEN_WIDTH)
+        {
+            hit = true;
+        }
+
+        for(var j = 0; j < enemies.length; j++)
+        {
+            if(intersect(bullets[i].position.x,  bullets[i].position.y,
+                TILE, TILE, enemies[j].position.y, TILE, TILE) == true)
+                {
+                    // kill both the bullet and the enemy
+                    enemies.splice(j, 1);
+                    hit = true;
+                    // increment the player score
+                    score += 1;
+                    break;
+                }
+        }
+        if(hit == true)
+        {
+            bullets.splice(i, 1);
+            break;
+        }
+    }
+}
+
 
 function handleEnemy(action, deltaTime)
 {
