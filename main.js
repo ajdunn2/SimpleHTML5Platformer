@@ -72,6 +72,7 @@ var LAYER_OBJECT_TRIGGERS = 4;
 // some variables to calculate the Frames Per Second (FPS - this tells use
 // how fast our game is running, and allows us to make the game run at a
 // constant speed)
+var showfps = false;
 var fps = 0;
 var fpsCount = 0;
 var fpsTime = 0;
@@ -523,9 +524,13 @@ function runFPS(deltaTime)
     }
 
     // Draw the FPS.
-    // context.fillStyle = "#f00";
-    // context.font = "14px Arial";
-    // context.fillText("FPS: " + fps, 25, 20, 100);
+    if (showfps == true)
+    {
+        context.fillStyle = "#f00";
+        context.font = "14px Arial";
+        context.fillText("FPS: " + fps, 25, 20, 100);
+    }
+
 }
 
 
@@ -551,6 +556,11 @@ function run()
         runGameOver(deltaTime);
     }
 
+    if(keyboard.isKeyDown(keyboard.KEY_F) == true){
+        showfps = true;
+    } else if (keyboard.isKeyDown(keyboard.KEY_G) == true){
+        showfps = false;
+    }
     runFPS(deltaTime); // Draw FPS.
 
 }
