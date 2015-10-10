@@ -12,6 +12,9 @@ var ANIM_SHOOT_RIGHT = 7;
 var ANIM_CLIMB = 8;
 var ANIM_MAX = 9;
 
+var PLAY_NORMAL = 0;
+var PLAY_CLIMB = 1;
+
 var Player = function()
 {
     this.sprite = new Sprite("ChuckNorris.png");
@@ -42,6 +45,8 @@ var Player = function()
     this.cooldownTimer = 0;
     this.hitTimer = 0.5;
 
+    this.playerState = PLAY_NORMAL;
+
     this.position = new Vector2();
     this.position.set(9*TILE, 0*TILE);
 
@@ -69,6 +74,66 @@ Player.prototype.update = function(deltaTime)
     }
 
 
+    this.changePlayerState();
+
+    switch(this.playerState)
+    {
+        case PLAY_NORMAL:
+            // update normal.
+            this.updateNormal(deltaTime)
+            break;
+        case PLAY_CLIMB:
+            // update ladder.
+            this.updateClimb(deltaTime)
+            break;
+    }
+
+}
+
+Player.prototype.changePlayerState = function()
+{
+    var tx = pixelToTile(this.position.x);
+    var ty = pixelToTile(this.position.y);
+
+    if(cellAtTileCoord(LAYER_LADDERS, tx, ty) == true)
+    {
+        console.log('ladder');
+        this.playerState = PLAY_CLIMB;
+    } else
+    {
+        this.playerState = PLAY_NORMAL;
+    }
+}
+
+Player.prototype.draw = function()
+{
+    this.sprite.draw(context, this.position.x - worldOffsetX, this.position.y);
+}
+
+
+Player.prototype.updateClimb = function(deltaTime)
+{
+    if(keyboard.isKeyDown(keyboard.KEY_UP) == true)
+    {
+        if(this.sprite.currentAnimation != ANIM_CLIMB)
+        {
+            this.sprite.setAnimation(ANIM_CLIMB);
+        }
+        this.position.y = Math.floor(this.position.y - (deltaTime * 100));
+    }
+
+    if(keyboard.isKeyDown(keyboard.KEY_DOWN) == true)
+    {
+        if(this.sprite.currentAnimation != ANIM_CLIMB)
+        {
+            this.sprite.setAnimation(ANIM_CLIMB);
+        }
+        this.position.y = Math.floor(this.position.y + (deltaTime * 100));
+    }
+}
+
+Player.prototype.updateNormal = function(deltaTime)
+{
     var left = false;
     var right = false;
     var jump = false;
@@ -295,10 +360,56 @@ Player.prototype.update = function(deltaTime)
     if (player.health <= 0){
         gs.setState(gs.STATE_GAMEOVER);
     }
-
 }
 
-Player.prototype.draw = function()
+function updateClimbState()
 {
-    this.sprite.draw(context, this.position.x - worldOffsetX, this.position.y);
+    var climbUp = false;
+    var climbDown = false;
+    var wasMovingUp = false;
+    var wasMovingDown = false;
+
+    if(keyboard.isKeyDown(keyboard.KEY_UP) == true)
+    {
+        climbUp = true;
+        // update sprite;
+    }
+    if(keyboard.isKeyDown(keyboard.KEY_DOWN) == true)
+    {
+        climbDown = true;
+        // update sprite
+    }
+
+    if (player.velocity.y > 0)
+    {
+        wasMovingUp = true;
+    }
+    if (player.velocity.y < 0)
+    {
+        wasMovingDown = true;
+    }
+
+    ddy = GRAVITY;
+    if (climbUp == true)
+    {
+        ddy = ddy - ACCEL;
+    }
+    else if (wasMovingUp == true)
+    {
+        this.velocity.y = bound(this.velocity.y + (deltaTime * ddy), -MAXDY, MAXDY);
+    }
+
+
+    if (climbDown == true)
+    {
+        ddy = ddy + ACCEL;
+    }
+    else if (wasMovingUp == true)
+    {
+        this.velocity.y = bound(this.velocity.y + (deltaTime * ddy), -MAXDY, MAXDY);
+    }
+
+    this.velocity.y = bound(this.velocity.y + (deltaTime * ddy), -MAXDY, MAXDY);
+
+
 }
