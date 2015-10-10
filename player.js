@@ -274,6 +274,12 @@ Player.prototype.update = function(deltaTime)
         }
     }
 
+    if(cellAtTileCoord(LAYER_OBJECT_TRIGGERS, tx, ty) == true)
+    {
+        // game over
+        gs.setState(gs.STATE_GAMEOVER);
+    }
+
 }
 
 Player.prototype.draw = function()

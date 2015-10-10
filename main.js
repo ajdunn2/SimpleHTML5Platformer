@@ -249,6 +249,29 @@ function initialize()
         }
     }
 
+    // initialize trigger layer in collison map
+    cells[LAYER_OBJECT_TRIGGERS] = [];
+    idx = 0;
+    for(var y = 0; y < level1.layers[LAYER_OBJECT_TRIGGERS].height; y++)
+    {
+        cells[LAYER_OBJECT_TRIGGERS][y] = [];
+        for(var x = 0; x < level1.layers[LAYER_OBJECT_ENEMIES].width; x++)
+        {
+            if(level1.layers[LAYER_OBJECT_TRIGGERS].data[idx] != 0)
+            {
+                cells[LAYER_OBJECT_TRIGGERS][y][x] = 1;
+                cells[LAYER_OBJECT_TRIGGERS][y-1][x] = 1;
+                cells[LAYER_OBJECT_TRIGGERS][y-1][x+1] = 1;
+                cells[LAYER_OBJECT_TRIGGERS][y][x+1] = 1;
+            }
+            else if (cells[LAYER_OBJECT_TRIGGERS][y][x] != 1)
+            {
+                // if we haven't set this cell's value, then set it to 0 now
+                cells[LAYER_OBJECT_TRIGGERS][y][x] = 0;
+            }
+            idx++;
+        }
+    }
 
 
     musicBackground = new Howl(
@@ -422,10 +445,22 @@ function drawBullets()
 
 function createAbullet()
 {
-    var b = new Bullet(player.position.x, player.position.y, (player.direction == 1));
+    if (player.direction == 1)
+    {
+        var b = new Bullet(player.position.x + 47 + TILE, player.position.y - (TILE/2) + random(-TILE/4, TILE/4), (player.direction == 1));
+    }
+    else
+    {
+        var b = new Bullet(player.position.x - 47, player.position.y - (TILE/2) + random(-TILE/4, TILE/4), (player.direction == 1));
+    }
     bullets.push(b);
 }
 
+// Return a random number between to variables.
+function random(floor, ceil)
+{
+	return Math.floor((Math.random()*(ceil-floor))+floor);
+}
 
 function handleEnemy(action, deltaTime)
 {
