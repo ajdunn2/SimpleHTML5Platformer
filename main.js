@@ -230,6 +230,25 @@ function initialize()
         }
     }
 
+    // Add enemies
+    idx = 0;
+    for(var y = 0; y < level1.layers[LAYER_OBJECT_ENEMIES].height; y++)
+    {
+        for(var x = 0; x <level1.layers[LAYER_OBJECT_ENEMIES].width; x++)
+        {
+            if(level1.layers[LAYER_OBJECT_ENEMIES].data[idx] != 0)
+            {
+                var px = tileToPixel(x);
+                var py = tileToPixel(y);
+                var e = new Enemy(px, py);
+                enemies.push(e);
+            }
+            idx++;
+        }
+    }
+
+
+
     musicBackground = new Howl(
     {
         urls: ['background.ogg'],
@@ -317,6 +336,15 @@ function runGame(deltaTime)
 
 	// Updates
     player.update(deltaTime);
+
+    // Update and Draw enemies
+
+    for(var i=0; i < enemies.length; i++)
+    {
+        enemies[i].update(deltaTime);
+        enemies[i].draw();
+    }
+
 
 	// Draw the map.
     drawMap();

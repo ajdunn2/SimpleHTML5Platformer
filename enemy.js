@@ -1,22 +1,20 @@
-var LEFT = 0;
-var RIGHT = 1;
 
-var ANIM_IDLE_LEFT = 0;
-var ANIM_JUMP_LEFT = 1;
-var ANIM_WALK_LEFT = 2;
-var ANIM_IDLE_RIGHT = 3;
-var ANIM_JUMP_RIGHT = 4;
-var ANIM_WALK_RIGHT = 5;
-var ANIM_SHOOT_LEFT = 6;
-var ANIM_SHOOT_RIGHT = 7;
-var ANIM_CLIMB = 8;
-var ANIM_MAX = 9;
+var ANIM_BAT_LEFT = 0;
+var ANIM_BAT_RIGHT = 1;
+var ANIM_BAT_MAX = 2;
 
 var Enemy = function(x, y)
 {
     this.sprite = new Sprite("bat.png");
-    this.sprite.buildAnimation(2, 1, 88, 94, 0.3, [0,1]);
-    this.sprite.setAnimationOffset(0, -35, -40);
+    this.sprite.buildAnimation(3, 1, 88, 94, 0.3, [0, 1, 2]);
+    this.sprite.buildAnimation(3, 1, 88, 94, 0.3, [3, 4, 5]);
+
+    // Handle Animation Offset for all Animations.
+    for(var i = 0; i < ANIM_BAT_MAX; i++)
+    {
+        this.sprite.setAnimationOffset(i, -35, -40);
+    }
+
     this.position = new Vector2();
     this.position.set(x, y);
     this.velocity = new Vector2();
@@ -73,14 +71,22 @@ Enemy.prototype.update = function(deltaTime)
             }
         }
 
-        this.position.x = Math.floor(this.position.x + (dt * this.velocity.x));
-        this.velocity.x = bound(this.velocity.x + (dt * ddx), -ENEMY_MAXDX, ENEMY_MAXDX);
-
+        this.position.x = Math.floor(this.position.x + (deltaTime * this.velocity.x));
+        this.velocity.x = bound(this.velocity.x + (deltaTime * ddx), -ENEMY_MAXDX, ENEMY_MAXDX);
     }
-
 }
 
 Enemy.prototype.draw = function()
 {
-    this.sprite.draw(context, this.position.x - worldOffsetX, this.position.y);
+
+    if(this.moveRight)
+    {
+        this.sprite.setAnimation(ANIM_BAT_LEFT);
+        this.sprite.draw(context, this.position.x - worldOffsetX, this.position.y);
+    }
+    else
+    {
+        this.sprite.setAnimation(ANIM_BAT_RIGHT);
+        this.sprite.draw(context, this.position.x - worldOffsetX, this.position.y);
+    }
 }
