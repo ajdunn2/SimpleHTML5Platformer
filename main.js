@@ -271,6 +271,15 @@ function initialize()
 
 }
 
+// Test to see if 2 rectangles intersect.
+function intersects(x1, y1, w1, h1, x2, y2, w2, h2)
+{
+	if(y2 + h2 < y1 || x2 + w2 < x1 || x2 > x1 + w1 || y2 > y1 + h1)
+	{
+		return false;
+	}
+	return true;
+}
 
 // Helper function to show collisions.
 function drawCollisions(drawCol)
@@ -337,19 +346,16 @@ function runGame(deltaTime)
 	// Updates
     player.update(deltaTime);
 
-    // Update and Draw enemies
+    // Update enemies
+    handleEnemy(0, deltaTime);
 
-    for(var i=0; i < enemies.length; i++)
-    {
-        enemies[i].update(deltaTime);
-        enemies[i].draw();
-    }
+    // Check for enemies hitting player
+    handleEnemy(3, deltaTime);
 
-
-	// Draw the map.
-    drawMap();
-    player.draw();
-	handleEnemy(deltaTime);
+	// Draw
+    drawMap(); // Draw Map
+    player.draw(); // Draw Player
+	handleEnemy(1, deltaTime); // Draw Enemies
 
 	// Draw Score.
 	context.fillStyle = "white";
@@ -365,10 +371,29 @@ function runGame(deltaTime)
 	}
 }
 
-function handleEnemy(deltaTime)
+function handleEnemy(action, deltaTime)
 {
-		// enemy.update(deltaTime);
-		// enemy.draw();
+    for(var i = 0; i < enemies.length; i++)
+    {
+        switch(action)
+    	{
+    		case 0:
+    			enemies[i].update(deltaTime);
+    			break;
+    		case 1:
+    			enemies[i].draw();
+    			break;
+            case 3:
+                if(intersects(player.position.x, player.position.y,
+                    player.width, player.height, enemies[i].position.x,
+                    enemies[i].position.y, enemies[i].width, enemies[i].height))
+                {
+                    console.log(1);
+                }
+                break;
+
+    	}
+    }
 }
 
 function runGameOver(deltaTime)

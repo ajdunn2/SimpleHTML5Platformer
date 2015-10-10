@@ -15,6 +15,9 @@ var Enemy = function(x, y)
         this.sprite.setAnimationOffset(i, -35, -40);
     }
 
+    this.width = 88;
+    this.height = 94;
+
     this.position = new Vector2();
     this.position.set(x, y);
     this.velocity = new Vector2();

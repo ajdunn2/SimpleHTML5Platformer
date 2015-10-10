@@ -12,7 +12,8 @@ var ANIM_SHOOT_RIGHT = 7;
 var ANIM_CLIMB = 8;
 var ANIM_MAX = 9;
 
-var Player = function(){
+var Player = function()
+{
     this.sprite = new Sprite("ChuckNorris.png");
     this.sprite.buildAnimation(12, 8, 165, 126, 0.05,
         [0, 1, 2, 3, 4, 5, 6, 7]);
