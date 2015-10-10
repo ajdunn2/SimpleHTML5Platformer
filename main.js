@@ -92,6 +92,16 @@ var bullets = [];
 // Load the image to use for level tiles.
 var tileset = document.createElement("img");
 tileset.src = "tileset.png";
+var fullHeart = document.createElement("img");
+fullHeart.src = "img/heart01.png";
+
+// load an image to draw
+var halfHeart = document.createElement("img");
+halfHeart.src = "img/heart02.png";
+
+// load an image to draw
+var chuckNorris = document.createElement("img");
+chuckNorris.src = "hero.png";
 
 // My variables.
 var gameOverTimer = 0;
@@ -365,7 +375,7 @@ function runGame(deltaTime)
 	// Quick Check for game Over if falls of screen.
 	if (player.position.y > SCREEN_HEIGHT + 35)
 	{
-			lives = lives -1; // loose one heart.
+			lives = lives - 1; // loose one heart.
 			gs.setState(gs.STATE_GAMEOVER);
 	}
 
@@ -401,7 +411,28 @@ function runGame(deltaTime)
 	{
 			// context.drawImage(heartImage, 20 + ((heartImage.width+2)*i), 10);
 	}
+
+    // Show heart (health)
+    hearts();
+
 }
+
+function hearts()
+{
+    var heartSpace = 1;
+    var fullHearts = Math.floor(player.health/2);
+    // Show all full hearts
+    for (var i = 0; i < fullHearts; i++)
+    {
+        context.drawImage(fullHeart, 20 + ((fullHeart.width+2) * heartSpace), 10);
+        heartSpace++;
+    }
+    // Half a life
+    if (player.health % 2 != 0){
+        context.drawImage(halfHeart, 20 + ((halfHeart.width+2) * heartSpace), 10);
+    }
+}
+
 
 function handleBullets(deltaTime)
 {
@@ -480,7 +511,10 @@ function handleEnemy(action, deltaTime)
                     player.width, player.height, enemies[i].position.x,
                     enemies[i].position.y, enemies[i].width, enemies[i].height))
                 {
-                    console.log('hitenemy');
+                    if (player.hitTimer <= 0){
+                        player.health = player.health - 1;
+                        player.hitTimer = 0.4;
+                    }
                 }
                 break;
 
