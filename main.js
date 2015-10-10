@@ -325,11 +325,11 @@ function runSplash(deltaTime)
     context.textAlign = "center";
     context.fillText("PLATFORMER GAME", canvas.width/2, 130);
     context.font = "25px Arial";
-    context.fillText("PRESS SPACE", canvas.width/2, 190);
+    context.fillText("PRESS ENTER", canvas.width/2, 190);
 
 
     // Check for spacebar
-    if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
+    if(keyboard.isKeyDown(keyboard.KEY_ENTER) == true)
     {
          gs.setState(gs.STATE_GAME);
     }
@@ -355,12 +355,15 @@ function runGame(deltaTime)
     handleEnemy(3, deltaTime);
 
     // Bullets hitting enemies
-    handleBullets();
+    handleBullets(deltaTime);
 
 	// Draw
     drawMap(); // Draw Map
     player.draw(); // Draw Player
 	handleEnemy(1, deltaTime); // Draw Enemies
+
+    // Draw Bullets
+    drawBullets();
 
 	// Draw Score.
 	context.fillStyle = "white";
@@ -376,7 +379,7 @@ function runGame(deltaTime)
 	}
 }
 
-function handleBullets()
+function handleBullets(deltaTime)
 {
     var hit = false;
     for(var i = 0; i < bullets.length; i++)
@@ -390,8 +393,8 @@ function handleBullets()
 
         for(var j = 0; j < enemies.length; j++)
         {
-            if(intersect(bullets[i].position.x,  bullets[i].position.y,
-                TILE, TILE, enemies[j].position.y, TILE, TILE) == true)
+            if(intersects(bullets[i].position.x,  bullets[i].position.y,
+                32, 32, enemies[j].position.x, enemies[j].position.y, TILE, TILE) == true)
                 {
                     // kill both the bullet and the enemy
                     enemies.splice(j, 1);
@@ -407,6 +410,20 @@ function handleBullets()
             break;
         }
     }
+}
+
+function drawBullets()
+{
+    for(var i = 0; i < bullets.length; i++)
+    {
+        bullets[i].draw();
+    }
+}
+
+function createAbullet()
+{
+    var b = new Bullet(player.position.x, player.position.y, (player.direction == 1));
+    bullets.push(b);
 }
 
 
@@ -427,7 +444,7 @@ function handleEnemy(action, deltaTime)
                     player.width, player.height, enemies[i].position.x,
                     enemies[i].position.y, enemies[i].width, enemies[i].height))
                 {
-                    console.log(1);
+                    console.log('hitenemy');
                 }
                 break;
 

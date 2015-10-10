@@ -68,25 +68,49 @@ Player.prototype.update = function(deltaTime)
     {
         left = true;
         this.direction = LEFT;
-        if(this.sprite.currentAnimation != ANIM_WALK_LEFT &&
-            this.jumping == false)
+        if (this.cooldownTimer <=0)
         {
-            this.sprite.setAnimation(ANIM_WALK_LEFT);
+            if(this.sprite.currentAnimation != ANIM_WALK_LEFT &&
+                this.jumping == false)
+            {
+                this.sprite.setAnimation(ANIM_WALK_LEFT);
+            }
         }
+        else
+        {
+            if(this.sprite.currentAnimation != ANIM_SHOOT_LEFT &&
+                this.jumping == false)
+            {
+                this.sprite.setAnimation(ANIM_SHOOT_LEFT);
+            }
+        }
+
+
     }
     else if(keyboard.isKeyDown(keyboard.KEY_RIGHT) == true)
     {
         right = true;
         this.direction = RIGHT;
-        if(this.sprite.currentAnimation != ANIM_WALK_RIGHT &&
-            this.jumping == false)
+        if (this.cooldownTimer <=0)
         {
-            this.sprite.setAnimation(ANIM_WALK_RIGHT);
+            if(this.sprite.currentAnimation != ANIM_WALK_RIGHT &&
+                this.jumping == false)
+            {
+                this.sprite.setAnimation(ANIM_WALK_RIGHT);
+            }
+        }
+        else
+        {
+            if(this.sprite.currentAnimation != ANIM_SHOOT_RIGHT &&
+                this.jumping == false)
+            {
+                this.sprite.setAnimation(ANIM_SHOOT_RIGHT);
+            }
         }
     }
     else
     {
-        if(this.jumping == false && this.falling == false)
+        if(this.jumping == false && this.falling == false && this.cooldownTimer <= 0)
         {
             if(this.direction == LEFT)
             {
@@ -108,6 +132,7 @@ Player.prototype.update = function(deltaTime)
     if(keyboard.isKeyDown(keyboard.KEY_UP) == true)
     {
         jump = true;
+        cooldownTimer = 0;
         if(left == true)
         {
             this.sprite.setAnimation(ANIM_JUMP_LEFT);
@@ -127,9 +152,17 @@ Player.prototype.update = function(deltaTime)
     && this.cooldownTimer <= 0)
     {
         sfxFire.play();
-        this.cooldownTimer = 0.3;
+        this.cooldownTimer = 0.2;
         // Shoot a bullet.
-
+        createAbullet();
+        if(this.direction == LEFT)
+        {
+            this.sprite.setAnimation(ANIM_SHOOT_LEFT);
+        }
+        else
+        {
+            this.sprite.setAnimation(ANIM_SHOOT_RIGHT);
+        }
 
     }
 

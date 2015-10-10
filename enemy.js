@@ -22,8 +22,8 @@ var Enemy = function(x, y)
     this.position.set(x, y);
     this.velocity = new Vector2();
 
+    // Randomly pick a starting direction.
     var dir = rand(0,1);
-
     if (dir == 0)
     {
         this.moveRight = true;
@@ -34,8 +34,6 @@ var Enemy = function(x, y)
         this.moveRight = false;
         this.sprite.setAnimation(ANIM_BAT_LEFT);
     }
-
-
 
     this.pause = 0;
 }
@@ -79,7 +77,7 @@ Enemy.prototype.update = function(deltaTime)
                 this.moveRight = false;
                 // Set Animation go letft
                 this.sprite.setAnimation(ANIM_BAT_LEFT);
-                this.pause = 0.5;
+                this.pause = 1.0;
             }
         }
 
@@ -95,7 +93,7 @@ Enemy.prototype.update = function(deltaTime)
                 this.moveRight = true;
                 // Set Animation go right
                 this.sprite.setAnimation(ANIM_BAT_RIGHT);
-                this.pause = 0.5;
+                this.pause = 1.0;
             }
         }
 
