@@ -81,6 +81,10 @@ var fpsTime = 0;
 var chuckNorris = document.createElement("img");
 chuckNorris.src = "hero.png";
 
+// load an image to draw
+var crt = document.createElement("img");
+crt.src = "img/crt.png";
+
 var player = new Player();
 var keyboard = new Keyboard();
 var gs = new GameState();
@@ -458,7 +462,7 @@ function handleBullets(deltaTime)
                     enemies.splice(j, 1);
                     hit = true;
                     // increment the player score
-                    score += 1;
+                    score += 100;
                     break;
                 }
         }
@@ -531,7 +535,7 @@ function runGameOver(deltaTime)
     context.fillStyle = "#916A5E";
     context.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    context.font = "55px Arial";
+    context.font = "55px VT323";
     context.fillStyle = "#f5f5f5"
     context.textAlign = "center";
     context.fillText("GAME OVER", canvas.width/2, 130);
@@ -600,6 +604,8 @@ function run()
         showfps = false;
     }
     runFPS(deltaTime); // Draw FPS.
+
+    context.drawImage(crt, 0, 0);
 }
 
 initialize();
