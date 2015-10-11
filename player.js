@@ -119,6 +119,8 @@ Player.prototype.draw = function()
 
 Player.prototype.updateClimb = function(deltaTime)
 {
+    var down = false;
+    // Keyboard Input
     if(keyboard.isKeyDown(keyboard.KEY_UP) == true)
     {
         if(this.sprite.currentAnimation != ANIM_CLIMB)
@@ -134,6 +136,7 @@ Player.prototype.updateClimb = function(deltaTime)
             this.sprite.setAnimation(ANIM_CLIMB);
         }
         this.position.y = Math.floor(this.position.y + (deltaTime * 100));
+        down = true;
     }
     else
     {
@@ -141,6 +144,30 @@ Player.prototype.updateClimb = function(deltaTime)
         {
             this.sprite.setAnimation(ANIM_CLIMB_STILL);
         }
+    }
+
+
+    // Collision detection.
+    var tx = pixelToTile(this.position.x);
+    var ty = pixelToTile(this.position.y);
+    var nx = (this.position.x) % TILE; // true if player overlaps right.
+    var ny = (this.position.y) % TILE; // true if player overlaps below.
+    var cell = cellAtTileCoord(LAYER_PLATFORMS, tx, ty);
+    var cellright = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty);
+    var celldown = cellAtTileCoord(LAYER_PLATFORMS, tx, ty + 1);
+    var celldiag = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty + 1);
+
+    // If the player has vertical velocity, then check to see if above/below
+    // platform is hit. If it is, clamp y position to stop verical velocity.
+
+    if(down == true && (celldown && !cell) || (celldiag && !cellright && nx))
+    {
+        // Clamp the y position to avoid falling into platform below.
+        this.position.y = tileToPixel(ty);
+        this.velocity.y = 0;
+        this.falling = false;
+        this.jumping = false;
+        ny = 0;
     }
 };
 
@@ -337,7 +364,7 @@ Player.prototype.updateNormal = function(deltaTime)
             ny = 0;
         }
     }
-    
+
     if(this.velocity.x > 0)
     {
         if((cellright && !cell) || (celldiag && !celldown && ny))
@@ -358,7 +385,6 @@ Player.prototype.updateNormal = function(deltaTime)
             this.velocity.x = 0; // Stop horizontal velocity.
         }
     }
-
 
     if(cellAtTileCoord(LAYER_OBJECT_TRIGGERS, tx, ty) == true)
     {
