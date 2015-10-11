@@ -336,27 +336,29 @@ Player.prototype.updateNormal = function(deltaTime)
             cellright = celldiag;
             ny = 0;
         }
-        if(this.velocity.x > 0)
+    }
+    
+    if(this.velocity.x > 0)
+    {
+        if((cellright && !cell) || (celldiag && !celldown && ny))
         {
-            if((cellright && !cell) || (celldiag && !celldown && ny))
-            {
-                // Clamp the x position to avoid moving into the platform we
-                // just hit.
-                this.position.x = tileToPixel(tx);
-                this.velocity.x = 0; // Stop horizontal velocity.
-            }
-        }
-        else if(this.velocity.x < 0)
-        {
-            if((cell && !cellright) || (celldown && !celldiag && ny))
-            {
-                // Clamp the x position to avoid moving into the platform we
-                // just hit.
-                this.position.x = tileToPixel(tx + 1);
-                this.velocity.x = 0; // Stop horizontal velocity.
-            }
+            // Clamp the x position to avoid moving into the platform we
+            // just hit.
+            this.position.x = tileToPixel(tx);
+            this.velocity.x = 0; // Stop horizontal velocity.
         }
     }
+    else if(this.velocity.x < 0)
+    {
+        if((cell && !cellright) || (celldown && !celldiag && ny))
+        {
+            // Clamp the x position to avoid moving into the platform we
+            // just hit.
+            this.position.x = tileToPixel(tx + 1);
+            this.velocity.x = 0; // Stop horizontal velocity.
+        }
+    }
+
 
     if(cellAtTileCoord(LAYER_OBJECT_TRIGGERS, tx, ty) == true)
     {
