@@ -34,7 +34,7 @@ Sprite.prototype.setAnimation = function(index)
 		return;
 	this.currentAnimation = index;
 	this.currentFrame = 0;
-}
+};
 
 Sprite.prototype.getFrameWidth = function()
 {
@@ -56,7 +56,7 @@ Sprite.prototype.setAnimationOffset = function(anim, x, y) {
 
 Sprite.prototype.getAnimationOffset = function() {
 	return this.offsets[this.currentAnimation];
-}
+};
 
 Sprite.prototype.buildAnimation = function(frameXCount, frameYCount, frameW, frameH, timeStep, animIdxArray)
 {
@@ -81,10 +81,8 @@ Sprite.prototype.buildAnimation = function(frameXCount, frameYCount, frameW, fra
 
 Sprite.prototype.isFinished = function()
 {
-	if(this.currentFrame == this.animations[this.currentAnimation].length-1)
-		return true;
-	return false;
-}
+	return (this.currentFrame == this.animations[this.currentAnimation].length-1);
+};
 
 Sprite.prototype.update = function(dt) {
 	if(this.animations.length == 0)
@@ -100,8 +98,7 @@ Sprite.prototype.update = function(dt) {
 	while(this.frameTime > this.animations[this.currentAnimation][this.currentFrame].duration)
 	{
 		this.currentFrame+=this.playDir;		
-		
-		
+
 		if(this.currentFrame >= this.animations[this.currentAnimation].length || 
 			this.currentFrame < 0)
 		{
@@ -112,7 +109,7 @@ Sprite.prototype.update = function(dt) {
 			else
 			{
 				this.currentFrame-=this.playDir;
-				this.playDir = this.playDir*-1
+				this.playDir = this.playDir*-1;
 				this.currentFrame+=this.playDir;
 			}
 		}
@@ -140,11 +137,3 @@ Sprite.prototype.draw = function(c, x, y) {
 			this.animations[this.currentAnimation][this.currentFrame].width,
 			this.animations[this.currentAnimation][this.currentFrame].height);
 };
-
-
-
-
-
-
-
-

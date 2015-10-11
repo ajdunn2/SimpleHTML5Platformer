@@ -410,7 +410,6 @@ function updateClimbState()
         this.velocity.y = bound(this.velocity.y + (deltaTime * ddy), -MAXDY, MAXDY);
     }
 
-
     if (climbDown == true)
     {
         ddy = ddy + ACCEL;
