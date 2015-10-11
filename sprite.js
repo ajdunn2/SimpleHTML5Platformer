@@ -1,4 +1,3 @@
-
 var Frame = function(x, y, width, height, duration){
 	this.x = x;
 	this.y = y;
@@ -13,14 +12,14 @@ var Sprite = function(filename) {
 		this.image = document.createElement("img");
 		this.image.src = filename;
 	}
-	
+
 	this.currentAnimation = 0;
 	this.currentFrame = 0;
-	
-		// this will be an array of frame arrays (so each element in the
-		// animations array will be an array of frames)
+
+	// this will be an array of frame arrays (so each element in the
+	// animations array will be an array of frames)
 	this.animations = [];		
-	this.offsets = [];		// offset vectors for each animation
+	this.offsets = []; // offset vectors for each animation
 	
 	this.frameTime = 0;
 	this.loop = true;	
