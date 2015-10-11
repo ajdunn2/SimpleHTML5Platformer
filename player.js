@@ -135,14 +135,13 @@ Player.prototype.updateClimb = function(deltaTime)
         }
         this.position.y = Math.floor(this.position.y + (deltaTime * 100));
     }
-    //else if(keyboard.isKeyDown(keyboard.KEY_LEFT) == true)
-    //{
-    //    if(this.sprite.currentAnimation != ANIM_CLIMB)
-    //    {
-    //        this.sprite.setAnimation(ANIM_CLIMB);
-    //    }
-    //    this.position.x = Math.floor(this.position.x - (deltaTime * 200));
-    //}
+    else
+    {
+        if(this.sprite.currentAnimation != ANIM_CLIMB_STILL)
+        {
+            this.sprite.setAnimation(ANIM_CLIMB_STILL);
+        }
+    }
 };
 
 Player.prototype.updateNormal = function(deltaTime)
