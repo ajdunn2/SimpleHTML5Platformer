@@ -10,7 +10,8 @@ var ANIM_WALK_RIGHT = 5;
 var ANIM_SHOOT_LEFT = 6;
 var ANIM_SHOOT_RIGHT = 7;
 var ANIM_CLIMB = 8;
-var ANIM_MAX = 9;
+var ANIM_CLIMB_STILL = 9;
+var ANIM_MAX = 10;
 
 var PLAY_NORMAL = 0;
 var PLAY_CLIMB = 1;
@@ -36,6 +37,8 @@ var Player = function()
     [79, 80, 81, 82,83, 84, 85, 86, 87, 88, 89, 90, 91, 92]); // shoot right.
     this.sprite.buildAnimation(12, 8, 165, 126, 0.05,
         [41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51]); // climb.
+    this.sprite.buildAnimation(12, 8, 165, 126, 0.05,
+        [42]); // climb.
 
     for(var i=0; i<ANIM_MAX; i++)
     {
@@ -48,7 +51,7 @@ var Player = function()
     this.playerState = PLAY_NORMAL;
 
     this.position = new Vector2();
-    this.position.set(9*TILE, 0*TILE);
+    this.position.set(9 * TILE, 0 * TILE);
 
     this.width = 159;
     this.height = 163;
@@ -61,7 +64,7 @@ var Player = function()
     this.direction = LEFT;
 
     this.health = 6;
-}
+};
 
 Player.prototype.update = function(deltaTime)
 {
@@ -80,22 +83,25 @@ Player.prototype.update = function(deltaTime)
     {
         case PLAY_NORMAL:
             // update normal.
-            this.updateNormal(deltaTime)
+            this.updateNormal(deltaTime);
             break;
         case PLAY_CLIMB:
             // update ladder.
-            this.updateClimb(deltaTime)
+            this.updateClimb(deltaTime);
             break;
     }
 
-}
+};
 
 Player.prototype.changePlayerState = function()
 {
     var tx = pixelToTile(this.position.x);
     var ty = pixelToTile(this.position.y);
 
-    if(cellAtTileCoord(LAYER_LADDERS, tx, ty) == true)
+    if(cellAtTileCoord(LAYER_LADDERS, tx, ty) == true &&
+        (keyboard.isKeyDown(keyboard.KEY_LEFT) != true) &&
+        (keyboard.isKeyDown(keyboard.KEY_RIGHT) != true)
+    )
     {
         console.log('ladder');
         this.playerState = PLAY_CLIMB;
@@ -103,12 +109,12 @@ Player.prototype.changePlayerState = function()
     {
         this.playerState = PLAY_NORMAL;
     }
-}
+};
 
 Player.prototype.draw = function()
 {
     this.sprite.draw(context, this.position.x - worldOffsetX, this.position.y);
-}
+};
 
 
 Player.prototype.updateClimb = function(deltaTime)
@@ -121,8 +127,7 @@ Player.prototype.updateClimb = function(deltaTime)
         }
         this.position.y = Math.floor(this.position.y - (deltaTime * 100));
     }
-
-    if(keyboard.isKeyDown(keyboard.KEY_DOWN) == true)
+    else if(keyboard.isKeyDown(keyboard.KEY_DOWN) == true)
     {
         if(this.sprite.currentAnimation != ANIM_CLIMB)
         {
@@ -130,7 +135,15 @@ Player.prototype.updateClimb = function(deltaTime)
         }
         this.position.y = Math.floor(this.position.y + (deltaTime * 100));
     }
-}
+    //else if(keyboard.isKeyDown(keyboard.KEY_LEFT) == true)
+    //{
+    //    if(this.sprite.currentAnimation != ANIM_CLIMB)
+    //    {
+    //        this.sprite.setAnimation(ANIM_CLIMB);
+    //    }
+    //    this.position.x = Math.floor(this.position.x - (deltaTime * 200));
+    //}
+};
 
 Player.prototype.updateNormal = function(deltaTime)
 {
@@ -159,8 +172,6 @@ Player.prototype.updateNormal = function(deltaTime)
                 this.sprite.setAnimation(ANIM_SHOOT_LEFT);
             }
         }
-
-
     }
     else if(keyboard.isKeyDown(keyboard.KEY_RIGHT) == true)
     {
@@ -219,7 +230,7 @@ Player.prototype.updateNormal = function(deltaTime)
     }
 
     // From Audio tutorial.
-    if(this.cooldownTimer >0)
+    if(this.cooldownTimer > 0)
     {
         this.cooldownTimer -= deltaTime;
     }
@@ -229,7 +240,7 @@ Player.prototype.updateNormal = function(deltaTime)
         sfxFire.play();
         this.cooldownTimer = 0.2;
         // Shoot a bullet.
-        createAbullet();
+        createABullet();
         if(this.direction == LEFT)
         {
             this.sprite.setAnimation(ANIM_SHOOT_LEFT);
@@ -238,7 +249,6 @@ Player.prototype.updateNormal = function(deltaTime)
         {
             this.sprite.setAnimation(ANIM_SHOOT_RIGHT);
         }
-
     }
 
     var wasleft = this.velocity.x < 0;
@@ -265,7 +275,7 @@ Player.prototype.updateNormal = function(deltaTime)
     }
     if (jump && !this.jumping && !falling)
     {
-        // apply an instantaneous (large) verical impulse
+        // Apply an instantaneous (large) vertical impulse.
         ddy = ddy - JUMP;
         this.jumping = true;
         if(this.direction == LEFT)
@@ -360,7 +370,7 @@ Player.prototype.updateNormal = function(deltaTime)
     if (player.health <= 0){
         gs.setState(gs.STATE_GAMEOVER);
     }
-}
+};
 
 function updateClimbState()
 {
@@ -404,12 +414,10 @@ function updateClimbState()
     {
         ddy = ddy + ACCEL;
     }
-    else if (wasMovingUp == true)
+    else if (wasMovingDown == true)
     {
         this.velocity.y = bound(this.velocity.y + (deltaTime * ddy), -MAXDY, MAXDY);
     }
 
     this.velocity.y = bound(this.velocity.y + (deltaTime * ddy), -MAXDY, MAXDY);
-
-
 }

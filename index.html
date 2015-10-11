@@ -1,17 +1,41 @@
+<!doctype html>
 <html>
-  <body>
-    <canvas id="gameCanvas" width="640" height="480">
-          This text is displayed if your browser does not support HTML5.
-    </canvas>
-    <script src="howler/howler.min.js"></script>
-    <script src="vector2.js"></script>
-    <script src="level1.js"></script>
-    <script src="gamestate.js"></script>
-    <script src="keyboard.js"></script>
-    <script src="sprite.js"></script>
-    <script src="player.js"></script>
-    <script src="enemy.js"></script>
-    <script src="bullet.js"></script>
-    <script src="main.js"></script>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <title>Simple Platformer Game</title>
+  <link href='https://fonts.googleapis.com/css?family=VT323' rel='stylesheet' type='text/css'>
+  <style>
+    body{
+      background-color: #0b7b62;
+    }
+    canvas{
+      display : block;
+      margin : 25px auto;
+      border: 5px solid #bcf1df;
+    }
+    p{
+      font-family: VT323, Arial, serif;
+      color: #f3f3f3;
+      text-align: center;
+      font-size: 1.5em;
+    }
+  </style>
+</head>
+<body>
+<canvas id="gameCanvas" width="640" height="480">
+  This text is displayed if your browser does not support HTML5.
+</canvas>
+<p>controls: up, down, left, right, space, enter</p>
+<!-- Game JS -->
+<script src="howler/howler.min.js"></script>
+<script src="vector2.js"></script>
+<script src="level1.js"></script>
+<script src="gamestate.js"></script>
+<script src="keyboard.js"></script>
+<script src="sprite.js"></script>
+<script src="player.js"></script>
+<script src="enemy.js"></script>
+<script src="bullet.js"></script>
+<script src="main.js"></script>
+</body>
 </html>

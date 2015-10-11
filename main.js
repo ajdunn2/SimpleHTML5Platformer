@@ -92,10 +92,11 @@ var bullets = [];
 // Load the image to use for level tiles.
 var tileset = document.createElement("img");
 tileset.src = "tileset.png";
+
+var heartBox = document.createElement("img");
+heartBox.src = "img/heart00.png";
 var fullHeart = document.createElement("img");
 fullHeart.src = "img/heart01.png";
-
-// load an image to draw
 var halfHeart = document.createElement("img");
 halfHeart.src = "img/heart02.png";
 
@@ -110,8 +111,6 @@ var worldOffsetX = 0;
 
 // UI variables
 var score = 0;
-var lives = 4;
-
 
 // Utility functions.
 function  cellAtPixelCoord(layer, x, y)
@@ -354,12 +353,12 @@ function runSplash(deltaTime)
     context.fillStyle = "#5E8591";
     context.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    context.font = "55px Arial";
+    context.font = "55px VT323";
     context.fillStyle = "#f5f5f5"
     context.textAlign = "center";
     context.fillText("PLATFORMER GAME", canvas.width/2, 130);
-    context.font = "25px Arial";
-    context.fillText("PRESS ENTER", canvas.width/2, 190);
+    context.font = "25px VT323";
+    context.fillText("PRESS ENTER", canvas.width/2, 290);
 
 
     // Check for spacebar
@@ -375,8 +374,9 @@ function runGame(deltaTime)
 	// Quick Check for game Over if falls of screen.
 	if (player.position.y > SCREEN_HEIGHT + 35)
 	{
-			lives = lives - 1; // loose one heart.
-			gs.setState(gs.STATE_GAMEOVER);
+            player.health -= 1; // loose one heart.
+            player.position.set(9 * TILE, 0 * TILE);
+			//gs.setState(gs.STATE_GAMEOVER);
 	}
 
 	// Updates
@@ -399,20 +399,23 @@ function runGame(deltaTime)
     // Draw Bullets
     drawBullets();
 
+    context.rect(SCREEN_WIDTH /4, -5, SCREEN_WIDTH /2, 55);
+
+    var my_gradient = context.createLinearGradient(0,0,0,25);
+    my_gradient.addColorStop(0, "rgba(0, 0, 200, 0.5)");
+    my_gradient.addColorStop(1, "rgba(0, 5, 80, 0.5)");
+    context.fillStyle = my_gradient;
+
+    context.fill();
+
 	// Draw Score.
 	context.fillStyle = "white";
-	context.font="28px Arial";
+    context.font = "28px VT323";
 	context.textAlign = "center";
 	var scoreText = "SCORE: " + score;
 	context.fillText(scoreText, SCREEN_WIDTH /2, 35);
 
-	// Draw Life counter.
-	for(var i=0; i<lives; i++)
-	{
-			// context.drawImage(heartImage, 20 + ((heartImage.width+2)*i), 10);
-	}
-
-    // Show heart (health)
+	// Draw Life counter & Show heart (health)
     hearts();
 
 }
@@ -421,15 +424,15 @@ function hearts()
 {
     var heartSpace = 1;
     var fullHearts = Math.floor(player.health/2);
-    // Show all full hearts
+    // Show all full hearts.
     for (var i = 0; i < fullHearts; i++)
     {
-        context.drawImage(fullHeart, 20 + ((fullHeart.width+2) * heartSpace), 10);
+        context.drawImage(fullHeart, 15 + ((fullHeart.width+2) * heartSpace), SCREEN_HEIGHT - 40);
         heartSpace++;
     }
-    // Half a life
+    // Half a life.
     if (player.health % 2 != 0){
-        context.drawImage(halfHeart, 20 + ((halfHeart.width+2) * heartSpace), 10);
+        context.drawImage(halfHeart, 15 + ((halfHeart.width+2) * heartSpace), SCREEN_HEIGHT - 40);
     }
 }
 
@@ -475,15 +478,17 @@ function drawBullets()
     }
 }
 
-function createAbullet()
+function createABullet()
 {
     if (player.direction == 1)
     {
-        var b = new Bullet(player.position.x + 47 + TILE, player.position.y - (TILE/2) + random(-TILE/4, TILE/4), (player.direction == 1));
+        var b = new Bullet(player.position.x + 47 + TILE, player.position.y - (TILE/2)
+            + random(-TILE/4, TILE/4), (player.direction == 1));
     }
     else
     {
-        var b = new Bullet(player.position.x - 47, player.position.y - (TILE/2) + random(-TILE/4, TILE/4), (player.direction == 1));
+        var b = new Bullet(player.position.x - 47, player.position.y - (TILE/2)
+            + random(-TILE/4, TILE/4), (player.direction == 1));
     }
     bullets.push(b);
 }
@@ -517,7 +522,6 @@ function handleEnemy(action, deltaTime)
                     }
                 }
                 break;
-
     	}
     }
 }
@@ -596,7 +600,6 @@ function run()
         showfps = false;
     }
     runFPS(deltaTime); // Draw FPS.
-
 }
 
 initialize();
