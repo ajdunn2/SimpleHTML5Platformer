@@ -517,8 +517,8 @@ function handleEnemy(action, deltaTime)
     			break;
             case 3:
                 if(intersects(player.position.x, player.position.y,
-                    player.width, player.height, enemies[i].position.x,
-                    enemies[i].position.y, enemies[i].width, enemies[i].height))
+                    TILE, TILE, enemies[i].position.x,
+                    enemies[i].position.y, TILE, TILE))
                 {
                     if (player.hitTimer <= 0){
                         player.health = player.health - 1;
