@@ -548,7 +548,9 @@ function runGameOver(deltaTime)
         // Put the player back to start for now.
         player.position.x = SCREEN_WIDTH/2;
         player.position.y = 0;
-        gs.setState(gs.STATE_SPLASH);
+
+        //gs.setState(gs.STATE_SPLASH);
+        location.reload();
     }
 
 }
