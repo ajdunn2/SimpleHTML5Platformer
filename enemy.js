@@ -1,13 +1,17 @@
 
 var ANIM_BAT_LEFT = 0;
 var ANIM_BAT_RIGHT = 1;
-var ANIM_BAT_MAX = 2;
+var ANIM_BAT_AT_LEFT = 2;
+var ANIM_BAT_AT_RIGHT = 3;
+var ANIM_BAT_MAX = 4;
 
 var Enemy = function(x, y)
 {
     this.sprite = new Sprite("bat.png");
     this.sprite.buildAnimation(3, 1, 88, 94, 0.3, [0, 1]);
     this.sprite.buildAnimation(3, 1, 88, 94, 0.3, [3, 4]);
+    this.sprite.buildAnimation(3, 1, 88, 94, 0.3, [1, 2]);
+    this.sprite.buildAnimation(3, 1, 88, 94, 0.3, [4, 5]);
 
     // Handle Animation Offset for all Animations.
     for(var i = 0; i < ANIM_BAT_MAX; i++)
@@ -89,7 +93,7 @@ Enemy.prototype.update = function(deltaTime)
             }
             else
             {
-                this.velocity.x =0;
+                this.velocity.x = 0;
                 this.moveRight = true;
                 // Set Animation go right
                 this.sprite.setAnimation(ANIM_BAT_RIGHT);
@@ -102,7 +106,19 @@ Enemy.prototype.update = function(deltaTime)
     }
 };
 
+Enemy.prototype.hit = function()
+{
+    this.velocity.x *= 5; // speed up attack
+    if(this.moveRight)
+    {
+        this.sprite.setAnimation(ANIM_BAT_AT_RIGHT);
+    } else
+    {
+        this.sprite.setAnimation(ANIM_BAT_AT_LEFT);
+    }
+};
+
 Enemy.prototype.draw = function()
 {
-        this.sprite.draw(context, this.position.x - worldOffsetX, this.position.y);
+    this.sprite.draw(context, this.position.x - worldOffsetX, this.position.y);
 };

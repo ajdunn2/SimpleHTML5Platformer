@@ -76,7 +76,6 @@ Player.prototype.update = function(deltaTime)
         this.hitTimer -= deltaTime;
     }
 
-
     this.changePlayerState();
 
     switch(this.playerState)
@@ -95,7 +94,7 @@ Player.prototype.update = function(deltaTime)
 
 Player.prototype.changePlayerState = function()
 {
-    var tx = pixelToTile(this.position.x);
+    var tx = pixelToTile(this.position.x + 16);
     var ty = pixelToTile(this.position.y);
 
     if(cellAtTileCoord(LAYER_LADDERS, tx, ty) == true &&
@@ -103,7 +102,7 @@ Player.prototype.changePlayerState = function()
         (keyboard.isKeyDown(keyboard.KEY_RIGHT) != true)
     )
     {
-        console.log('ladder');
+        //ladder
         this.playerState = PLAY_CLIMB;
     } else
     {
@@ -119,6 +118,9 @@ Player.prototype.draw = function()
 
 Player.prototype.updateClimb = function(deltaTime)
 {
+
+    this.velocity.x = 0;
+
     var down = false;
     // Keyboard Input
     if(keyboard.isKeyDown(keyboard.KEY_UP) == true)
@@ -146,7 +148,6 @@ Player.prototype.updateClimb = function(deltaTime)
         }
     }
 
-
     // Collision detection.
     var tx = pixelToTile(this.position.x);
     var ty = pixelToTile(this.position.y);
@@ -160,7 +161,7 @@ Player.prototype.updateClimb = function(deltaTime)
     // If the player has vertical velocity, then check to see if above/below
     // platform is hit. If it is, clamp y position to stop verical velocity.
 
-    if(down == true && (celldown && !cell) || (celldiag && !cellright && nx))
+    if((celldown && !cell) || (celldiag && !cellright && nx))
     {
         // Clamp the y position to avoid falling into platform below.
         this.position.y = tileToPixel(ty);
@@ -168,6 +169,16 @@ Player.prototype.updateClimb = function(deltaTime)
         this.falling = false;
         this.jumping = false;
         ny = 0;
+
+        if(this.direction == "RIGHT")
+        {
+            this.sprite.setAnimation(ANIM_IDLE_RIGHT);
+        }
+        else if(this.direction == "LEFT")
+        {
+            this.sprite.setAnimation(ANIM_IDLE_LEFT);
+        }
+
     }
 };
 
@@ -398,52 +409,3 @@ Player.prototype.updateNormal = function(deltaTime)
         gs.setState(gs.STATE_GAMEOVER);
     }
 };
-
-function updateClimbState()
-{
-    var climbUp = false;
-    var climbDown = false;
-    var wasMovingUp = false;
-    var wasMovingDown = false;
-
-    if(keyboard.isKeyDown(keyboard.KEY_UP) == true)
-    {
-        climbUp = true;
-        // update sprite;
-    }
-    if(keyboard.isKeyDown(keyboard.KEY_DOWN) == true)
-    {
-        climbDown = true;
-        // update sprite
-    }
-
-    if (player.velocity.y > 0)
-    {
-        wasMovingUp = true;
-    }
-    if (player.velocity.y < 0)
-    {
-        wasMovingDown = true;
-    }
-
-    ddy = GRAVITY;
-    if (climbUp == true)
-    {
-        ddy = ddy - ACCEL;
-    }
-    else if (wasMovingUp == true)
-    {
-        this.velocity.y = bound(this.velocity.y + (deltaTime * ddy), -MAXDY, MAXDY);
-    }
-
-    if (climbDown == true)
-    {
-        ddy = ddy + ACCEL;
-    }
-    else if (wasMovingDown == true)
-    {
-        this.velocity.y = bound(this.velocity.y + (deltaTime * ddy), -MAXDY, MAXDY);
-    }
-
-    this.velocity.y = bound(this.velocity.y + (deltaTime * ddy), -MAXDY, MAXDY);
-}

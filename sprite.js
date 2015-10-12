@@ -18,11 +18,11 @@ var Sprite = function(filename) {
 
 	// this will be an array of frame arrays (so each element in the
 	// animations array will be an array of frames)
-	this.animations = [];		
-	this.offsets = []; // offset vectors for each animation
-	
+	this.animations = [];
+	this.offsets = []; // Offset vectors for each animation
+
 	this.frameTime = 0;
-	this.loop = true;	
+	this.loop = true;
 	this.pingpong = false;
 	this.playDir = 1;
 };
@@ -30,7 +30,9 @@ var Sprite = function(filename) {
 Sprite.prototype.setAnimation = function(index)
 {
 	if(index < 0 || index > this.animations.length)
+	{
 		return;
+	}
 	this.currentAnimation = index;
 	this.currentFrame = 0;
 };
@@ -60,20 +62,20 @@ Sprite.prototype.getAnimationOffset = function() {
 Sprite.prototype.buildAnimation = function(frameXCount, frameYCount, frameW, frameH, timeStep, animIdxArray)
 {
 	var animation = [];
-			
+
 	for(var i=0; i<animIdxArray.length; i++)
 	{
 		var index = animIdxArray[i];
 		var fX = index%frameXCount;
 		var fY = Math.floor(index/frameXCount);
-		
+
 		var u = fX * frameW;
 		var v = fY * frameH;
-		
-		var frame = new Frame(u, v, frameW, frameH, timeStep);		
+
+		var frame = new Frame(u, v, frameW, frameH, timeStep);
 		animation.push(frame);
 	}
-	
+
 	this.animations.push(animation);
 	this.offsets.push( new Vector2() );
 };
@@ -88,17 +90,17 @@ Sprite.prototype.update = function(dt) {
 		return;
 	if(this.animations[this.currentAnimation].length == 0)
 		return;
-	
+
 	if(this.animations[this.currentAnimation][this.currentFrame].duration < 0)
 		return;
-	
+
 	this.frameTime += dt;
-	
+
 	while(this.frameTime > this.animations[this.currentAnimation][this.currentFrame].duration)
 	{
-		this.currentFrame+=this.playDir;		
+		this.currentFrame+=this.playDir;
 
-		if(this.currentFrame >= this.animations[this.currentAnimation].length || 
+		if(this.currentFrame >= this.animations[this.currentAnimation].length ||
 			this.currentFrame < 0)
 		{
 			if(this.pingpong == false)
@@ -117,22 +119,22 @@ Sprite.prototype.update = function(dt) {
 };
 
 Sprite.prototype.draw = function(c, x, y) {
-	// img	Specifies the image, canvas, or video element to use	 
-	// sx	Optional. The x coordinate where to start clipping	
-	// sy	Optional. The y coordinate where to start clipping	
-	// swidth	Optional. The width of the clipped image	
-	// sheight	Optional. The height of the clipped image	
-	// x	The x coordinate where to place the image on the canvas	
-	// y	The y coordinate where to place the image on the canvas	
-	// width	Optional. The width of the image to use (stretch or reduce the image)	
+	// img	Specifies the image, canvas, or video element to use
+	// sx	Optional. The x coordinate where to start clipping
+	// sy	Optional. The y coordinate where to start clipping
+	// swidth	Optional. The width of the clipped image
+	// sheight	Optional. The height of the clipped image
+	// x	The x coordinate where to place the image on the canvas
+	// y	The y coordinate where to place the image on the canvas
+	// width	Optional. The width of the image to use (stretch or reduce the image)
 	// height	Optional. The height of the image to use (stretch or reduce the image)
-		
-	c.drawImage(this.image, 
-			this.animations[this.currentAnimation][this.currentFrame].x,
-			this.animations[this.currentAnimation][this.currentFrame].y,
-			this.animations[this.currentAnimation][this.currentFrame].width,
-			this.animations[this.currentAnimation][this.currentFrame].height,
-			x+this.offsets[this.currentAnimation].x, y+this.offsets[this.currentAnimation].y,
-			this.animations[this.currentAnimation][this.currentFrame].width,
-			this.animations[this.currentAnimation][this.currentFrame].height);
+
+	c.drawImage(this.image,
+		this.animations[this.currentAnimation][this.currentFrame].x,
+		this.animations[this.currentAnimation][this.currentFrame].y,
+		this.animations[this.currentAnimation][this.currentFrame].width,
+		this.animations[this.currentAnimation][this.currentFrame].height,
+		x + this.offsets[this.currentAnimation].x, y + this.offsets[this.currentAnimation].y,
+		this.animations[this.currentAnimation][this.currentFrame].width,
+		this.animations[this.currentAnimation][this.currentFrame].height);
 };

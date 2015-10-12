@@ -12,15 +12,15 @@ function getDeltaTime()
 	endFrameMillis = startFrameMillis;
 	startFrameMillis = Date.now();
 
-		// Find the delta time (dt) - the change in time since the last drawFrame
-		// We need to modify the delta time to something we can use.
-		// We want 1 to represent 1 second, so if the delta is in milliseconds
-		// we divide it by 1000 (or multiply by 0.001). This will make our
-		// animations appear at the right speed, though we may need to use
-		// some large values to get objects movement and rotation correct
+	// Find the delta time (dt) - the change in time since the last drawFrame
+	// We need to modify the delta time to something we can use.
+	// We want 1 to represent 1 second, so if the delta is in milliseconds
+	// we divide it by 1000 (or multiply by 0.001). This will make our
+	// animations appear at the right speed, though we may need to use
+	// some large values to get objects movement and rotation correct
 	var deltaTime = (startFrameMillis - endFrameMillis) * 0.001;
 
-		// validate that the delta is within range
+	// validate that the delta is within range
 	if(deltaTime > 1)
 		deltaTime = 1;
 
@@ -170,27 +170,27 @@ function bound(value, min, max)
 
 function drawMap()
 {
-		// Scrolling the level.
-		var maxTiles = Math.floor(SCREEN_WIDTH / TILE) + 2;
-		var tileX = pixelToTile(player.position.x);
-		var offsetX = TILE + Math.floor(player.position.x % TILE);
+	// Scrolling the level.
+	var maxTiles = Math.floor(SCREEN_WIDTH / TILE) + 2;
+	var tileX = pixelToTile(player.position.x);
+	var offsetX = TILE + Math.floor(player.position.x % TILE);
 
-		startX = tileX - Math.floor(maxTiles / 2);
+	startX = tileX - Math.floor(maxTiles / 2);
 
-		if(startX < -1)
-		{
-				startX = 0;
-				offsetX = 0;
-		}
-		if(startX > MAP.tw - maxTiles)
-		{
-			startX = MAP.tw - maxTiles + 1;
-			offsetX = TILE;
-		}
+	if(startX < -1)
+	{
+			startX = 0;
+			offsetX = 0;
+	}
+	if(startX > MAP.tw - maxTiles)
+	{
+		startX = MAP.tw - maxTiles + 1;
+		offsetX = TILE;
+	}
 
-		worldOffsetX = startX * TILE + offsetX;
+	worldOffsetX = startX * TILE + offsetX;
 
-		// Draw the Map.
+	// Draw the Map.
     for(var layerIdx = 0; layerIdx < LAYER_COUNT; layerIdx++)
     {
         for(var y = 0; y < level1.layers[layerIdx].height; y++)
@@ -287,7 +287,6 @@ function initialize()
         }
     }
 
-
     musicBackground = new Howl(
     {
         urls: ['background.ogg'],
@@ -307,7 +306,6 @@ function initialize()
             isSfxPlaying = false;
         }
     });
-
 }
 
 // Test to see if 2 rectangles intersect.
@@ -364,13 +362,11 @@ function runSplash(deltaTime)
     context.font = "25px VT323";
     context.fillText("PRESS ENTER", canvas.width/2, 290);
 
-
     // Check for spacebar
     if(keyboard.isKeyDown(keyboard.KEY_ENTER) == true)
     {
          gs.setState(gs.STATE_GAME);
     }
-
 }
 
 function runGame(deltaTime)
@@ -458,6 +454,8 @@ function handleBullets(deltaTime)
             if(intersects(bullets[i].position.x,  bullets[i].position.y,
                 32, 32, enemies[j].position.x, enemies[j].position.y, TILE, TILE) == true)
                 {
+					enemies[i].hit();
+					enemies[i].draw();
                     // kill both the bullet and the enemy
                     enemies.splice(j, 1);
                     hit = true;
@@ -521,6 +519,7 @@ function handleEnemy(action, deltaTime)
                     enemies[i].position.y, TILE, TILE))
                 {
                     if (player.hitTimer <= 0){
+						enemies[i].hit();
                         player.health = player.health - 1;
                         player.hitTimer = 0.4;
                     }
@@ -539,6 +538,8 @@ function runGameOver(deltaTime)
     context.fillStyle = "#f5f5f5"
     context.textAlign = "center";
     context.fillText("GAME OVER", canvas.width/2, 130);
+	context.font = "35px VT323";
+	context.fillText("YOUR SCORE:" + score, canvas.width/2, 250);
 
     // Handle Timer.
     gameOverTimer += deltaTime;
@@ -549,7 +550,6 @@ function runGameOver(deltaTime)
         player.position.x = SCREEN_WIDTH/2;
         player.position.y = 0;
 
-        //gs.setState(gs.STATE_SPLASH);
         location.reload();
     }
 
@@ -574,9 +574,7 @@ function runFPS(deltaTime)
         context.font = "14px Arial";
         context.fillText("FPS: " + fps, 25, 20, 100);
     }
-
 }
-
 
 function run()
 {
