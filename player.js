@@ -96,6 +96,7 @@ Player.prototype.changePlayerState = function()
 {
     var tx = pixelToTile(this.position.x + 16);
     var ty = pixelToTile(this.position.y);
+    var tydown = pixelToTile(this.position.y + TILE);
 
     if(cellAtTileCoord(LAYER_LADDERS, tx, ty) == true &&
         (keyboard.isKeyDown(keyboard.KEY_LEFT) != true) &&
@@ -108,6 +109,18 @@ Player.prototype.changePlayerState = function()
     {
         this.playerState = PLAY_NORMAL;
     }
+
+
+    if(keyboard.isKeyDown(keyboard.KEY_DOWN) == true)
+    {
+        if(cellAtTileCoord(LAYER_LADDERS, tx, tydown) == true &&
+        cellAtTileCoord(LAYER_LADDERS, tx, ty) == false)
+        {
+            this.position.y = this.position.y + (TILE * 2);
+            this.playerState = PLAY_CLIMB;
+        }
+    }
+
 };
 
 Player.prototype.draw = function()
